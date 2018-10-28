@@ -8,12 +8,17 @@
 
 import UIKit
 
+protocol OptionsViewControllerDelegate: class {
+  func didSelectMenuIndex(_ index: Int)
+}
+
 class OptionsViewController: UITableViewController {
   
   private var isHidden = true
   private var panGesture: UIPanGestureRecognizer!
   private var maxPanCenter: CGFloat!
   private var minPanCenter: CGFloat!
+  weak var delegate: OptionsViewControllerDelegate?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -94,6 +99,7 @@ class OptionsViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     print("Did select row \(indexPath.row)")
     toggleMenu()
+    delegate?.didSelectMenuIndex(indexPath.row)
   }
   
 }
@@ -112,7 +118,5 @@ extension OptionsViewController: UIGestureRecognizerDelegate {
     }
     return true
   }
-  
-  
   
 }

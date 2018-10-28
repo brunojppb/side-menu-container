@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
   
-  let label = UILabel()
+  let button = UIButton()
   let text: String
   let color: UIColor
   
@@ -26,16 +26,23 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    label.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(label)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(button)
     let c: [NSLayoutConstraint] = [
-      label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-      label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+      button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      button.centerYAnchor.constraint(equalTo: view.centerYAnchor)
     ]
     NSLayoutConstraint.activate(c)
-    label.text = text
-    label.textColor = .white
+    button.setTitle(text, for: .normal)
+    button.setTitleColor(.white, for: .normal)
     view.backgroundColor = color
+    button.addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
+  }
+  
+  @objc func onButtonClick() {
+    let randomColor = UIColor(hue: CGFloat(drand48()), saturation: 1, brightness: 1, alpha: 1)
+    let vc = ViewController(text: "new controller", color: randomColor)
+    navigationController?.pushViewController(vc, animated: true)
   }
 
 

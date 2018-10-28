@@ -11,11 +11,23 @@ import UIKit
 class MenuViewController: UINavigationController {
   
   let optionsController = OptionsViewController()
+  let menuControllers: [UIViewController] = [
+    ViewController(text: "menu 1", color: .red),
+    ViewController(text: "menu 2", color: .blue),
+    ViewController(text: "menu 3", color: .darkGray),
+    ViewController(text: "menu 4", color: .green),
+    ViewController(text: "menu 5", color: .purple)
+  ]
   
   override init(rootViewController: UIViewController) {
     super.init(rootViewController: rootViewController)
+    setMenuButtonToRootViewController(rootViewController)
+    optionsController.delegate = self
+  }
+  
+  private func setMenuButtonToRootViewController(_ rootController: UIViewController) {
     let menuButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(onMenuSelect))
-    rootViewController.navigationItem.leftBarButtonItem = menuButton
+    rootController.navigationItem.leftBarButtonItem = menuButton
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -47,4 +59,16 @@ class MenuViewController: UINavigationController {
     optionsController.toggleMenu()
   }
   
+}
+
+extension MenuViewController: OptionsViewControllerDelegate {
+  func didSelectMenuIndex(_ index: Int) {
+    print("index selected: \(index)")
+    let selected = menuControllers[index]
+    viewControllers.removeAll()
+    pushViewController(selected, animated: false)
+    popToRootViewController(animated: false)
+    setMenuButtonToRootViewController(selected)
+    
+  }
 }
