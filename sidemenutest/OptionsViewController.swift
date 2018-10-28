@@ -9,6 +9,7 @@
 import UIKit
 
 protocol OptionsViewControllerDelegate: class {
+  var backgroundView: UIView { get }
   func didSelectMenuIndex(_ index: Int)
 }
 
@@ -23,9 +24,11 @@ class OptionsViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    tableView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
     panGesture = UIPanGestureRecognizer(target: self, action: #selector(didPan(gesture:)))
     panGesture.delegate = self
     view.addGestureRecognizer(panGesture)
+    // side menu with 2/3 of the screen (roughly)
     let width = UIScreen.main.bounds.width / 1.3
     view.frame = CGRect(x: -width, y: 0, width: width, height: UIScreen.main.bounds.height)
     let center = view.bounds.width / 2
@@ -69,12 +72,16 @@ class OptionsViewController: UITableViewController {
   
   private func toggleMenu(shouldHide: Bool) {
     let position = shouldHide ? -view.bounds.width : 0
+    let alpha: CGFloat = shouldHide ? 0 : 1
     var newFrame = view.frame
     newFrame.origin.x = position
-    UIView.animate(withDuration: 0.2, delay: 0, options: [.curveEaseInOut], animations: {
-      self.view.frame = newFrame
-    }) { _ in
-      self.isHidden = shouldHide
+    UIView.animate(withDuration: 0.2, delay: 0,
+                   options: [.curveEaseInOut],
+                   animations: { [weak self] in
+      self?.view.frame = newFrame
+      self?.delegate?.backgroundView.alpha = alpha
+    }) { [weak self] _ in
+      self?.isHidden = shouldHide
     }
   }
   

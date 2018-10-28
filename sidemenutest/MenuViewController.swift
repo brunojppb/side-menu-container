@@ -11,12 +11,14 @@ import UIKit
 class MenuViewController: UINavigationController {
   
   let optionsController = OptionsViewController()
+  let backgroundView: UIView = UIView()
+  
   let menuControllers: [UIViewController] = [
-    ViewController(text: "menu 1", color: .red),
-    ViewController(text: "menu 2", color: .blue),
-    ViewController(text: "menu 3", color: .darkGray),
-    ViewController(text: "menu 4", color: .green),
-    ViewController(text: "menu 5", color: .purple)
+    ViewController(text: "menu 0", color: .red),
+    ViewController(text: "menu 1", color: .blue),
+    ViewController(text: "menu 2", color: .darkGray),
+    ViewController(text: "menu 3", color: .green),
+    ViewController(text: "menu 4", color: .purple)
   ]
   
   override init(rootViewController: UIViewController) {
@@ -26,7 +28,9 @@ class MenuViewController: UINavigationController {
   }
   
   private func setMenuButtonToRootViewController(_ rootController: UIViewController) {
-    let menuButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(onMenuSelect))
+    let menuImage = UIImage(named: "menu")
+    let menuButton = UIBarButtonItem(image: menuImage, style: .plain, target: self,
+                                     action: #selector(onMenuSelect))
     rootController.navigationItem.leftBarButtonItem = menuButton
   }
   
@@ -48,10 +52,19 @@ class MenuViewController: UINavigationController {
   }
   
   private func setupUI() {
+    view.addSubview(backgroundView)
+    backgroundView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width,
+                                  height: UIScreen.main.bounds.height)
+    backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+    backgroundView.alpha = 0
     addChild(optionsController)
     view.addSubview(optionsController.view)
     optionsController.view.translatesAutoresizingMaskIntoConstraints = false
     optionsController.didMove(toParent: self)
+    optionsController.view.layer.zPosition = 999
+    backgroundView.layer.zPosition = 998
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onMenuSelect))
+    backgroundView.addGestureRecognizer(tapGesture)
   }
   
   @objc func onMenuSelect() {
@@ -61,6 +74,7 @@ class MenuViewController: UINavigationController {
   
 }
 
+// MARK: - OptionsViewControllerDelegate
 extension MenuViewController: OptionsViewControllerDelegate {
   func didSelectMenuIndex(_ index: Int) {
     print("index selected: \(index)")

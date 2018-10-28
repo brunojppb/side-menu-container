@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let vc = ViewController(text: "First Controller", color: UIColor.red)
     window?.rootViewController = MenuViewController(rootViewController: vc)
     window?.makeKeyAndVisible()
+    UINavigationBar.appearance().tintColor = UIColor.darkGray
     return true
   }
 
